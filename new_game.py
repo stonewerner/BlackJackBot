@@ -1,4 +1,6 @@
 import random
+import tkinter as tk
+from tkinter import messagebox, simpledialog
 
 STARTING_WALLET = 100
 SUITS = ['heart', 'spade', 'club', 'diamond']
@@ -56,114 +58,6 @@ class Player:
     def __repr__(self):
         return f"{'Dealer' if self.is_dealer else 'Player'}'s hand: {self.hand}, Value: {self.get_hand_value()}"
     
-"""
-
-def get_action(prompt, valid_inputs):
-    while True:
-        action = input(prompt).upper()
-        if action in valid_inputs:
-            return action
-        print("Invalid input")
-
-def get_bet(wallet):
-    while True:
-        try:
-            bet = int(input(f"Enter your bet (1-{wallet}): "))
-            if 1 <= bet <= wallet:
-                return bet
-            print(f"Invalid bet. Must be between 1 and {wallet}")
-        except ValueError:
-            print("Invalid input. Please enter a number.")
-
-def get_num_decks():
-    while True:
-        try:
-            num_decks = int(input(f"Enter the number of decks to play with ({MIN_DECKS}-{MAX_DECKS}): "))
-            if MIN_DECKS <= num_decks <= MAX_DECKS:
-                return num_decks
-            print(f"Invalid number. Must be between {MIN_DECKS} and {MAX_DECKS}")
-        except ValueError:
-            print("Invalid input. Please enter a number.")
-
-def play_round(deck, player, dealer):
-    player.clear_hand()
-    dealer.clear_hand()
-    
-    bet = get_bet(player.wallet)
-    
-    for _ in range(2):
-        player.add_card(deck.draw())
-        dealer.add_card(deck.draw())
-
-    print(f"Your hand: {player.hand}")
-    print(f"Dealer's face-up card: {dealer.hand[1]}")
-
-    # Player's turn
-    while player.get_hand_value() < 21:
-        action = get_action("H for Hit, S for Stand: ", ['H', 'S'])
-        if action == 'S':
-            break
-        player.add_card(deck.draw())
-        print(f"Your hand: {player.hand}")
-        if player.get_hand_value() > 21:
-            print("You bust!")
-            player.wallet -= bet
-            return
-
-    player_value = player.get_hand_value()
-    
-    # Dealer's turn
-    print(f"Dealer's hand: {dealer.hand}")
-    while dealer.get_hand_value() < 17:
-        dealer.add_card(deck.draw())
-        print(f"Dealer draws: {dealer.hand[-1]}")
-    
-    dealer_value = dealer.get_hand_value()
-
-    # Determine winner
-    if dealer_value > 21:
-        print("Dealer busts! You win!")
-        player.wallet += bet
-    elif player_value > dealer_value:
-        print("You win!")
-        player.wallet += bet
-    elif player_value < dealer_value:
-        print("Dealer wins.")
-        player.wallet -= bet
-    else:
-        print("It's a tie!")
-
-    print(f"Your wallet: ${player.wallet}")
-
-def main():
-    num_decks = get_num_decks()
-    deck = Deck(num_decks)
-    player = Player()
-    dealer = Player(is_dealer=True)
-
-    print(f"Starting game with {num_decks} deck{'s' if num_decks > 1 else ''}.")
-
-    while player.wallet > 0:
-        play = get_action("S to Start a new round, Q to Quit: ", ['S', 'Q'])
-        if play == 'Q':
-            break
-        play_round(deck, player, dealer)
-        if len(deck) < 20 * num_decks:  # Reshuffle when deck is low
-            print("Reshuffling the deck...")
-            deck.reset()
-
-    print("Thanks for playing!")
-
-if __name__ == "__main__":
-    main()
-
-    """
-
-import tkinter as tk
-from tkinter import messagebox, simpledialog
-import random
-
-# ... [Previous Card, Deck, and Player classes remain the same] ...
 
 class BlackjackGUI:
     def __init__(self, master):
