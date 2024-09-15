@@ -9,9 +9,9 @@ STARTING_WALLET = 100
 aces are counted as 11
 thus, dealer must stand on a "soft" 17
 blackjack pays 1.5x the bet
-BONUSES:
+
+to implement:
 splitting - when you're dealt 2 cards of equal value, can split and play 2 hands
-betting - implement placing a bet and keeping track of your $$$
 dynamic value of aces
 
 card counting* - because cards are dealt at random WITH REPLACEMENT, the "count" isn't really accurate
