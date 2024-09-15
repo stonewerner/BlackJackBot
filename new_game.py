@@ -63,7 +63,7 @@ class BlackjackGUI:
     def __init__(self, master):
         self.master = master
         self.master.title("Blackjack")
-        self.master.geometry("600x400")
+        self.master.geometry("600x500")  # Increased height for new section
 
         self.num_decks = self.get_num_decks()
         self.deck = Deck(self.num_decks)
@@ -109,9 +109,56 @@ class BlackjackGUI:
         self.wallet_label = tk.Label(self.master, text=f"Wallet: ${self.player.wallet}")
         self.wallet_label.pack(side=tk.RIGHT, padx=10)
 
+        # New section for Coach's Hints
+        self.hint_frame = tk.Frame(self.master)
+        self.hint_frame.pack(pady=10)
+
+        self.hint_label = tk.Label(self.hint_frame, text="Coach's Hint: ")
+        self.hint_label.pack(side=tk.LEFT)
+
+        self.hint_text = tk.StringVar()
+        self.hint_display = tk.Label(self.hint_frame, textvariable=self.hint_text)
+        self.hint_display.pack(side=tk.LEFT)
+
+        self.hint_button = tk.Button(self.hint_frame, text="Show Hint", command=self.toggle_hint)
+        self.hint_button.pack(side=tk.LEFT, padx=10)
+
+        self.hint_visible = False
+
+    def toggle_hint(self):
+        self.hint_visible = not self.hint_visible
+        if self.hint_visible:
+            self.hint_button.config(text="Hide Hint")
+            self.update_hint()
+        else:
+            self.hint_button.config(text="Show Hint")
+            self.hint_text.set("")
+
+    def update_hint(self):
+        if self.hint_visible:
+            player_value = self.player.get_hand_value()
+            dealer_up_card = self.dealer.hand[0].value
+            hint = self.get_optimal_move(player_value, dealer_up_card)
+            self.hint_text.set(hint)
+        else:
+            self.hint_text.set("")
+
+    def get_optimal_move(self, player_value, dealer_up_card):
+        # Basic strategy for when to hit or stand
+        if player_value <= 11:
+            return "Hit"
+        elif player_value == 12:
+            return "Hit" if dealer_up_card in [2, 3, 7, 8, 9, 10, 11] else "Stand"
+        elif 13 <= player_value <= 16:
+            return "Hit" if dealer_up_card in [7, 8, 9, 10, 11] else "Stand"
+        else:  # player_value >= 17
+            return "Stand"
+
+
     def new_game(self):
         self.player.clear_hand()
         self.dealer.clear_hand()
+        
         
         if len(self.deck) < 20 * self.num_decks:
             self.deck.reset()
@@ -127,11 +174,14 @@ class BlackjackGUI:
             self.player.add_card(self.deck.draw())
             self.dealer.add_card(self.deck.draw())
 
+        self.update_hint()
         self.update_display()
+
 
     def hit(self):
         self.player.add_card(self.deck.draw())
         self.update_display()
+        self.update_hint()
 
         if self.player.get_hand_value() > 21:
             self.end_game("You bust! Dealer wins.")
@@ -151,6 +201,7 @@ class BlackjackGUI:
             self.dealer_cards.config(text=f"{self.dealer.hand[0]}, Hidden Card")
 
         self.wallet_label.config(text=f"Wallet: ${self.player.wallet}")
+        self.update_hint()
 
     def determine_winner(self):
         player_value = self.player.get_hand_value()
